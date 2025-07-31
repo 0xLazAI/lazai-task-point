@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazai.mapper.UserMapper">
+    <sql id="Base_Column_List">
+        id, eth_address, tg_id, x_id, created_at, updated_at, status, content, name
+    </sql>
+
+
+
+    <sql id="insertBasic">
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="ethAddress != null">
+                eth_address,
+            </if>
+            <if test="tgId != null">
+                tg_id,
+            </if>
+            <if test="xId != null">
+                x_id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="createdAt != null">
+                created_at,
+            </if>
+            <if test="updatedAt != null">
+                updated_at,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="ethAddress != null">
+                #{ethAddress},
+            </if>
+            <if test="tgId != null">
+                #{tgId},
+            </if>
+            <if test="xId != null">
+                #{xId},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            #{createdAt},
+            #{updatedAt},
+        </trim>
+    </sql>
+
+
+    
+    <sql id="updateBasic">
+        <set>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="tgId != null">
+                tg_id=#{tgId},
+            </if>
+            <if test="xId != null">
+                x_id=#{xId},
+            </if>
+            <if test="content != null">
+                content=#{content},
+            </if>
+            <if test="ethAddress != null">
+                eth_address=#{ethAddress},
+            </if>
+            updated_at=#{updatedAt},
+        </set>
+    </sql>
+
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id" parameterType="com.lazai.entity.User">
+        insert into user
+        <include refid="insertBasic"/>
+    </insert>
+
+    <update id="updateById" parameterType="com.lazai.entity.User">
+        update user
+        <include refid="updateBasic"/>
+        where id = #{id}
+    </update>
+    <update id="updateByEthAddress" parameterType="com.lazai.entity.User">
+        update user
+        <include refid="updateBasic"/>
+        where eth_address = #{ethAddress}
+    </update>
+
+    <select id="queryList" resultType="com.lazai.entity.User">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from user
+        <where>
+            <if test="userIds != null">
+                AND id IN
+                <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+                    #{userId}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY id asc
+    </select>
+</mapper>

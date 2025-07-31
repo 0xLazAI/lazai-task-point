@@ -1,0 +1,252 @@
+type Query{
+    getUserDetail(id: String): UserVoResponse
+
+    getNonce(address: String): StringResponse
+
+    getUserTaskTemplatesUse(bizReq: taskQueryRequest): TaskTemplateUseListResponse
+
+    getUserTaskRecords(bizReq: taskQueryRequest): TaskRecordListResponse
+
+    friendTaskStatusList(bizReq: FriendsTaskStatusPageQueryRequest): FriendTaskStatusPageList
+
+    getQualifiedFriends(bizReq: QualifiedFriendsQueryRequest): InvitingUserQualifiedResponse
+
+    getRank:RankResponse
+
+    isUserInWhiteList(userId: String!): BooleanResponse
+}
+
+type Mutation{
+    login(req: LoginReq!) : LoginResultResponse
+
+    loginWithTg(req: LoginWithTgReq!) : LoginResultResponse
+
+    bindTwitterUserInfo(req: BindTwitterUserInfoRequest!): BooleanResponse
+
+    bindEthAddress(req: BindEthAddressRequest!): BooleanResponse
+
+    claim(req: ClaimRequest!):BooleanResponse
+
+    bindEthAddressSimple(req: BindEthAddressSimpleRequest!): BooleanResponse
+
+}
+
+
+
+type TaskTemplateUseListResponse{
+    success: Boolean
+    traceId: String
+    data: [TaskTemplateUse]
+}
+
+type TaskRecordListResponse{
+    success: Boolean
+    traceId: String
+    data: [TaskRecord]
+}
+
+type InvitingUserQualifiedResponse{
+    success: Boolean
+    traceId: String
+    data: InvitingUserQualifiedResponseVO
+}
+
+type RankResponse{
+    success: Boolean
+    traceId: String
+    data: [RankVO]
+}
+
+type InvitingUserQualifiedResponseVO{
+    totalCount: String
+    qualifiedCount: String
+    totalScore: String
+}
+
+type RankVO{
+    cnt: String
+    userId: String
+    ethAddress: String
+}
+
+type FriendTaskStatusPageList{
+    success: Boolean
+    traceId: String
+    data: FriendTaskPagination
+}
+
+type FriendTaskPagination{
+    items: [FriendTaskStatus]
+    pagination: CommonPageDTO
+}
+
+type FriendTaskStatus{
+    address: String
+    status: String
+    inWhiteList: Boolean
+}
+
+type CommonPageDTO{
+    pageNum: String
+    pageSize: String
+    totalCount: String
+}
+
+type TaskRecord{
+    taskNo: String
+    taskName: String
+    taskTemplateId: String
+    content: String
+    context: String
+    creator: String
+    operator: String
+    version: Int
+    status: String
+    createdAt: String
+    updatedAt: String
+    innerUser: String
+    app: String
+    scoreInfo: [ScoreInfo]
+}
+
+type TaskTemplateUse{
+    taskName: String
+    taskTemplateId: String
+    taskFinishCount: String
+    taskCount: String
+    taskType: String
+    content: TaskTemplateContent
+    context: TaskTemplateContext
+}
+
+type TaskTemplateContent{
+    dailyTimesLimit: Int
+    twitterName: String
+}
+
+type TaskTemplateContext{
+    scoreType: String
+    score: String
+}
+
+
+type ScoreInfo{
+    createdAt: String
+    score: Int
+    bizId: String
+    scoreType: String
+    id: Int
+    userId: String
+    direction: String
+    updatedAt: String
+}
+
+type StringResponse{
+    success: Boolean
+    traceId: String
+    data: String
+}
+
+type BooleanResponse{
+    success: Boolean
+    traceId: String
+    data: Boolean
+}
+
+type UserVoResponse{
+    success: Boolean
+    traceId: String
+    data: UserVo
+}
+
+type UserVo {
+    # user id
+    id: String
+    # user name
+    name: String
+    # user status
+    status: String
+    tgId: String
+    xId: String
+    ethAddress: String
+    scoreInfo: UserScoreInfo
+}
+
+type UserScoreInfo{
+    commonScore: String
+}
+
+type LoginResultResponse{
+    success: Boolean
+    traceId: String
+    data: LoginResult
+}
+type LoginResult{
+    userId: String
+    token:String
+}
+
+input LoginWithTgReq {
+    # style id
+    tgId: String!
+    # is public
+    tgUserInfoStr: String
+}
+
+input LoginReq {
+    # style id
+    signature: String
+    # is public
+    ethAddress: String!
+
+    name: String
+
+    invitedCode: String
+}
+
+input BindTwitterUserInfoRequest {
+    # style id
+    code: String!
+    # is public
+    status: String
+}
+
+input FriendsTaskStatusPageQueryRequest{
+    page: String!
+    pageSize: String!
+}
+
+input QualifiedFriendsQueryRequest{
+    userId: String
+}
+
+input taskQueryRequest{
+    templateCodes: [String!]
+    taskNos: [String!]
+    appToken: String
+}
+
+input BindEthAddressRequest {
+    # style id
+    ethAddress: String!
+
+    signature: String!
+}
+
+input BindEthAddressSimpleRequest {
+    # style id
+    ethAddress: String!
+
+    userId: String!
+}
+
+input ClaimRequest {
+    # style id
+    templateCode: String!
+
+    app: String!
+
+    bizId: String
+
+    bizType: String
+}
