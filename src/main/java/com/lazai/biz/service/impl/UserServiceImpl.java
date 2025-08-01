@@ -264,6 +264,9 @@ public class UserServiceImpl implements UserService {
             }
             String storedInvitedCode = getInvitedCode(invitingUserId);
             if(!invitedCode.equals(storedInvitedCode)){
+                //throw new DomainException("invalid invited code", 403);
+            }
+            if(StringUtils.isBlank(invitingUserId)){
                 throw new DomainException("invalid invited code", 403);
             }
             List<UserInvites> invitingInfo = userInvitesRepository.getByInvitedUserId(invitingUserId);
