@@ -79,7 +79,7 @@ public class WhitelistAdminBizServiceImpl implements WhitelistAdminBizService {
         lazpadTwitterParam.setStatusList(Arrays.asList(TaskStatusEnum.INIT.value(), TaskStatusEnum.PROCESSING.value(),TaskStatusEnum.FINISH.value()));
         lazpadTwitterParam.setTaskTemplateId("twitterFocusLazpad");
         lazpadTwitterParam.setCreatedStart(startDate);
-        lazaiTwitterParam.setCreatedEnd(endDate);
+        lazpadTwitterParam.setCreatedEnd(endDate);
         Integer lazpadTwitterCnt = taskRecordRepository.queryListCnt(lazpadTwitterParam);
 
         TaskRecordQueryParam tgJoinParam = new TaskRecordQueryParam();
