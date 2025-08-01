@@ -17,6 +17,7 @@ import com.lazai.repostories.TaskRecordRepository;
 import com.lazai.repostories.TaskTemplateRepository;
 import com.lazai.repostories.UserRepository;
 import com.lazai.request.TaskCreateRequest;
+import com.lazai.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.lazai.biz.service.impl.AddScoreActionAndWhitelistActiveHandler.WHITE_LIST_KEY;
+import static com.lazai.biz.service.impl.LazbubuWhitelistBizServiceImpl.WHITE_LIST_RANK_SINGLE;
 
 @Service
 public class LazbubuWhitelistSchedulerServiceImpl implements LazbubuWhitelistSchedulerService {
@@ -69,6 +73,35 @@ public class LazbubuWhitelistSchedulerServiceImpl implements LazbubuWhitelistSch
             whitelists = lazbubuWhitelistRepository.queryList(lazbubuWhitelistQueryParam);
             for(LazbubuDataWhitelist whitelist:whitelists){
                 allDependencyTasksDone(context, whitelist);
+                minId = whitelist.getId();
+            }
+            lazbubuWhitelistQueryParam.setMinId(minId);
+        }while(!CollectionUtils.isEmpty(whitelists));
+    }
+
+    public void syncFinishCnt(){
+        LazbubuWhitelistQueryParam lazbubuWhitelistQueryParam = new LazbubuWhitelistQueryParam();
+        List<String> statusList = new ArrayList<>();
+        statusList.add("ACTIVE");
+        lazbubuWhitelistQueryParam.setStatusList(statusList);
+        BigInteger minId = BigInteger.ZERO;
+        lazbubuWhitelistQueryParam.setLimit(300);
+        lazbubuWhitelistQueryParam.setMinId(minId);
+        List<LazbubuDataWhitelist> whitelists = new ArrayList<>();
+        TaskTemplate taskTemplate = taskTemplateRepository.selectByCode("invitedFriendsComplete");
+        JSONObject taskTemplateContent = JSON.parseObject(taskTemplate.getContent());
+        JSONObject context = taskTemplateContent.getJSONObject("context");
+        do{
+            whitelists = lazbubuWhitelistRepository.queryList(lazbubuWhitelistQueryParam);
+            for(LazbubuDataWhitelist whitelist:whitelists){
+                if(whitelist.getCompletedCnt() != null && whitelist.getCompletedCnt() > 0){
+                    User userInfo = userRepository.findById(whitelist.getUserId(), false);
+                    JSONObject userSimple = new JSONObject();
+                    userSimple.put("id", userInfo.getId());
+                    userSimple.put("name", userInfo.getName());
+                    userSimple.put("ethAddress", userInfo.getEthAddress());
+                    RedisUtils.ZADD(WHITE_LIST_KEY, com.alibaba.fastjson2.JSON.toJSONString(userSimple), whitelist.getCompletedCnt());
+                }
                 minId = whitelist.getId();
             }
             lazbubuWhitelistQueryParam.setMinId(minId);

@@ -88,6 +88,13 @@ public class TestController {
         return JsonApiResponse.success(true);
     }
 
+    @GetMapping("/syncRankList")
+    @ResultLog(name = "TestController.syncRankList", methodType = MethodTypeEnum.UPPER)
+    public JsonApiResponse<Object> syncRankList(HttpServletRequest request){
+        lazbubuWhitelistSchedulerService.syncFinishCnt();
+        return JsonApiResponse.success(true);
+    }
+
     @PostMapping("/addSingleRankList")
     @ResultLog(name = "TestController.addSingleRankList", methodType = MethodTypeEnum.UPPER)
     public JsonApiResponse<Object> addSingleRankList(@RequestBody JSONObject req, HttpServletRequest request){
