@@ -184,7 +184,7 @@ public class TestController {
                             lazbubuWhitelistRepository.insert(lazbubuDataWhitelist);
                             ScoreAddRequest scoreAddRequest = new ScoreAddRequest();
                             scoreAddRequest.setAppToken("lazpad");
-                            scoreAddRequest.setScoreType("manual");
+                            scoreAddRequest.setScoreType("joinLazbubuWhitelist");
                             scoreAddRequest.setUserId(userId);
                             scoreAddRequest.setScore(BigInteger.valueOf(500));
                             scoreAddRequest.setDirection("ADD");
