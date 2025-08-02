@@ -30,7 +30,7 @@ public class WhitelistAdminBizServiceImpl implements WhitelistAdminBizService {
         LazbubuWhitelistQueryParam lazbubuWhitelistQueryParam = new LazbubuWhitelistQueryParam();
         //lazbubuWhitelistQueryParam.setMinId(BigInteger.valueOf(24));
         lazbubuWhitelistQueryParam.setStatusList(Collections.singletonList("ACTIVE"));
-        lazbubuWhitelistQueryParam.setSource("white_list_manual");
+        lazbubuWhitelistQueryParam.setSource("lazpad");
         Integer whitelistTotalCnt = lazbubuWhitelistRepository.pageQueryCnt(lazbubuWhitelistQueryParam);
 
         TaskRecordQueryParam lazaiTwitterParam = new TaskRecordQueryParam();
@@ -67,7 +67,7 @@ public class WhitelistAdminBizServiceImpl implements WhitelistAdminBizService {
         lazbubuWhitelistQueryParam.setCreatedStart(startDate);
         lazbubuWhitelistQueryParam.setCreatedEnd(endDate);
         lazbubuWhitelistQueryParam.setStatusList(Collections.singletonList("ACTIVE"));
-        lazbubuWhitelistQueryParam.setSource("white_list_manual");
+        lazbubuWhitelistQueryParam.setSource("lazpad");
         Integer whitelistTotalCnt = lazbubuWhitelistRepository.pageQueryCnt(lazbubuWhitelistQueryParam);
 
         TaskRecordQueryParam lazaiTwitterParam = new TaskRecordQueryParam();
